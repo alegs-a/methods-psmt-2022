@@ -1,0 +1,12 @@
+*.fls
+*.aux
+*.swp
+*.fdb_latexmk
+*.log
+*.gz
+*.toc
+venv/
+.DS_Store
+.idea
+data sheet.pdf
+methods ia1 psmt task sheet 2022.pdf
