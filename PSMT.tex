@@ -15,15 +15,16 @@
 
 
 \section{Introduction}
-The task outlined is to predict at what time a population of bacteria will
-completely cover the surface of a lake. In order to do this, the area of the
-lake must first be calculated from the diagram provided.
+The given task is to predict the time period after which a population of bacteria will completely cover the surface of a lake. In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
+
 
 \section{Assumptions and observations}
 
     \subsection{Observations}
 
-    When the diagram of the dam is oriented with the straight wall downwards, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
+    When the diagram of the dam is oriented with the straight wall horizontally, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
+
+    % Need second observation (issue #1)    
     
     \subsection{Assumptions}
     
@@ -33,8 +34,14 @@ lake must first be calculated from the diagram provided.
 
     In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
     
-\section{Translation of mathematical procedures}
+\section{Translation of mathematical concepts}
+    
+   a
 
-
+   \begin{equation}
+       A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
+   \end{equation}
+    
+%   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
 
 \end{document}
