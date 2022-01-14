@@ -2,6 +2,8 @@
 
 \usepackage{pgfplots}
     \pgfplotsset{compat=1.17}
+\usepackage{graphicx}
+    \graphicspath{{./images/}}
 
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
@@ -15,7 +17,11 @@
 
 
 \section{Introduction}
-The given task is to predict the time period after which a population of bacteria will completely cover the surface of a lake. In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
+    The given task is to predict the time period after which a population of bacteria will completely cover the surface of a lake (Figure \ref{figDamOutline}. In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
+
+    \begin{figure}
+        \centering
+
 
 
 \section{Assumptions and observations}
@@ -42,7 +48,7 @@ The given task is to predict the time period after which a population of bacteri
  
     This means that since the only key metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
 
-    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 coordinates, which were then scaled to the dimensions of the dam and used for the regressions.
+    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were then scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes are each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
     \begin{figure}
         \centering
@@ -57,9 +63,11 @@ The given task is to predict the time period after which a population of bacteri
 
             \end{axis}
         \end{tikzpicture}
+        \caption{Raw data from Python script}
+        \label{figRawData}
     \end{figure}
 
-    In an ideal scenario, a single function could be used to model the entire length of the dam's outline.  
+    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections, each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
 
     \begin{equation}
        A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
