@@ -10,13 +10,13 @@
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
 
+
+
 \begin{document}
 
 \maketitle
 \setcounter{tocdepth}{1}
 \tableofcontents
-
-
 
 \section{Introduction}
     The given task is to predict the time period after which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
@@ -50,11 +50,11 @@
 
     As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of dam.
 
-    In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$, for any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
+    In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
  
     This means that since the only key metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
 
-    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were then scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
+    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
     \begin{figure}
         \centering
@@ -64,14 +64,38 @@
                     xmajorgrids = true,
                     ymajorgrids = true
                 ]
-                \addplot[only marks, mark = x, color = blue]table[x=x, y=y]{data.txt};
+                \addplot[only marks, mark = x]table[x=x, y=y]{data.txt};
             \end{axis}
         \end{tikzpicture}
         \caption{Raw data from Python script}
         \label{figRawData}
     \end{figure}
 
-    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections, each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}, each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title = {\textbf{Sectioned data}},
+                    xmajorgrids = true,
+                    ymajorgrids = true
+                ]
+                \addplot[only marks, mark = x, color = red]table[x=x1, y=y1]{data/section1.txt};
+                \addplot[only marks, mark = x, color = blue]table[x=x2, y=y2]{data/section2.txt};
+                \addplot[only marks, mark = x, color = red]table[x=x3, y=y3]{data/section3.txt};
+                \addplot[only marks, mark = x, color = blue]table[x=x4, y=y4]{data/section4.txt};
+                \addplot[only marks, mark = x, color = red]table[x=x5, y=y5]{data/section5.txt};
+                \addplot[only marks, mark = x, color = blue]table[x=x6, y=y6]{data/section6.txt};
+                \addplot[only marks, mark = x, color = red]table[x=x7, y=y7]{data/section7.txt};
+                \addplot[only marks, mark = x, color = blue]table[x=x8, y=y8]{data/section8.txt};
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Data shown in coloured sections}
+        \label{figSectionedData}
+    \end{figure}
+
+    Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$.
 
     \begin{equation}
        A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
