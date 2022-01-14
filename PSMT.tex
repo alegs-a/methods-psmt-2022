@@ -35,13 +35,36 @@ The given task is to predict the time period after which a population of bacteri
     In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
     
 \section{Translation of mathematical concepts}
-    
-   a
 
-   \begin{equation}
+    As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of dam.
+
+    In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$, for any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
+ 
+    This means that since the only key metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
+
+    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 coordinates, which were then scaled to the dimensions of the dam and used for the regressions.
+
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                title = {\textbf{Raw data points}},
+                xmajorgrids = true,
+                ymajorgrids = true
+                ]
+
+                \addplot[only marks, mark = x]table[x=x, y=y]{data.txt};
+
+            \end{axis}
+        \end{tikzpicture}
+    \end{figure}
+
+    In an ideal scenario, a single function could be used to model the entire length of the dam's outline.  
+
+    \begin{equation}
        A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
-   \end{equation}
-    
+    \end{equation}
+ 
 %   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
 
 \end{document}
