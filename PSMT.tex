@@ -17,11 +17,11 @@
 
 
 \section{Introduction}
-    The given task is to predict the time period after which a population of bacteria will completely cover the surface of a lake (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
+    The given task is to predict the time period after which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
 
     \begin{figure}
         \centering
-        \includegraphics[width = 12cm]{dam cropped}
+        \includegraphics[width = 12cm]{damDiagram.png}
         \caption{Diagram of outline of dam}
         \label{figDamOutline}
     \end{figure}
@@ -52,19 +52,17 @@
  
     This means that since the only key metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
 
-    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were then scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes are each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
+    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were then scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
     \begin{figure}
         \centering
         \begin{tikzpicture}
             \begin{axis}[
-                title = {\textbf{Raw data points}},
-                xmajorgrids = true,
-                ymajorgrids = true
+                    title = {\textbf{Raw data points}},
+                    xmajorgrids = true,
+                    ymajorgrids = true
                 ]
-
-                \addplot[only marks, mark = x]table[x=x, y=y]{data.txt};
-
+                \addplot[only marks, mark = x, color = blue]table[x=x, y=y]{data.txt};
             \end{axis}
         \end{tikzpicture}
         \caption{Raw data from Python script}
