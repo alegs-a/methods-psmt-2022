@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install TeXlive
-        run: sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
+        run: sudo apt-get install texlive latexmk
       - name: LaTeX compile
         working-directory: ${{ env.DIR }}
         run: latexmk -pdf -bibtex ${{ env.FILE }}
