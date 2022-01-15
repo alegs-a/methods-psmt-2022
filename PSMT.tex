@@ -6,6 +6,7 @@
     \pgfplotsset{compat=1.17}
 \usepackage{graphicx}
     \graphicspath{{./images/}}
+\usepackage{amsmath}
 
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
@@ -34,7 +35,7 @@
 
     \subsection{Observations}
 
-    When the diagram of the dam is oriented with the straight wall horizontally, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
+    When the diagram of the dam is oriented with the straight wall colinear to the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
 
     % Need second observation (issue #1)    
     
@@ -71,7 +72,7 @@
         \label{figRawData}
     \end{figure}
 
-    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}, each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
 
     \begin{figure}
         \centering
@@ -95,7 +96,34 @@
         \label{figSectionedData}
     \end{figure}
 
-    Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$.
+\subsection{Calculation of area}
+
+    Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$. Let us also  define the piecewise function $f$ as follows:
+
+    \begin{equation}
+        f(x) = \begin{cases}
+            f_1(x) & b_0 \leq x < b_1 \\
+            f_2(x) & b_1 \leq x < b_2 \\
+            \vdots & \vdots \\
+            f_7(x) & b_6 \leq x < b_7 \\
+            f_8(x) & b_7 \leq x \leq b_8
+        \end{cases}
+        \label{eqnPiecewiseFunction}
+    \end{equation}
+
+    The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
+
+    \begin{align*}
+        f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
+        f_2(x) &= 0.0922x^5 - 3.4033x^4 + 47.748x^3 - 315.07x^2 + 968.69x - 1022.9 \\
+        f_3(x) &= -0.4898x^4 + 22.736x^3 - 388.82x^2 + 2903.4x - 7897 \\
+        f_4(x) &= 1.1895x^6 - 110.38x^5 + 4255.2x^4 - 8.7230\cdot 10^04x^3 + 1.0027\cdot 10^6x^2 \\ &- 6.1276\cdot 10^6x + 1.5551\cdot 10^7 \\
+        f_5(x) &= 6046.8x^6 - 6.5135 \cdot 10^5x^5 + 2.9233 \cdot 10^7x^4 - 6.9967 \cdot 10^8x^3 \\ &+ 9.4192 \cdot 10^9x^2 - 6.7624 \cdot 10^{10}x + 2.0228 \cdot 10^{11} \\
+        f_6(x) &= -3.4000x^3 + 199.63x^2 - 3897.0x + 25388 \\
+        f_7(x) &= 253.31x^5 - 26978x^4 + 1.1491 \cdot 10^6x^3 - 2.4471 \cdot 10^7x^2 + 2.6052 \cdot 10^8x \\ &- 1.1093 \cdot 10^9 \\
+        f_8(x) &= -0.0556x^3 + 4.6621x^2 - 134.73x + 1347.2
+    \end{align*}
+
 
     \begin{equation}
        A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
