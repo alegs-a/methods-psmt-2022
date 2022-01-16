@@ -1,6 +1,5 @@
 \documentclass{article}
 
-% commit to test workflows
 
 \usepackage{pgfplots}
     \pgfplotsset{compat=1.17}
@@ -124,11 +123,35 @@
         f_8(x) &= -0.0556x^3 + 4.6621x^2 - 134.73x + 1347.2
     \end{align*}
 
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title = {\textbf{Function modelling outline of lake}},
+                    xmajorgrids = true,
+                    ymajorgrids = true,
+                    restrict y to domain*=0:140
+                ]
+                \addplot[color = red, domain = 0:4.278922345, smooth]{-1.23638*x^2 + 25.66721*x - 1.46574};
+                \addplot[color = blue, domain = 4.278922345:11.07765452, smooth]{0.0922*x^5 - 3.4033*x^4 + 47.7479*x^3 - 315.0713*x^2 + 968.6939*x - 1022.9268};
+                \addplot[color = red, domain = 11.07765452:14.38193344, smooth]{-0.4898*x^4 + 22.7361*x^3 - 388.8167*x^2 + 2903.3720*x - 7896.9865};
+%                \addplot[color = blue, domain = 14.38193344:17.49603803, smooth]{3.4624*x^5 - 280.3803*x^4 + 9065.4212*x^3 - 146281.0500*x^2 + 1177965.4248*x - 3786937.4387};
+                \addplot[mark = none, color = blue, smooth]table[x=x4, y=y4]{data/calculatedSection4.txt};
+                % 6046.771999329330000*C2^6 - 651353.151682996000000*C2^5 + 29232785.773414700000000*C2^4 - 699672004.563012000000000*C2^3 + 9419179590.356580000000000*C2^2 - 67624182395.647400000000000*C2 + 202279215616.422000000000000
+                \addplot[mark = none, color = red, smooth]table[x=x5, y=y5]{data/calculatedSection5.txt};
+                % 3.4000047417*E3^3 + 199.6280602865*E3^2 - 3,897.0360743426*E3 + 25,388.8275429106
+                \addplot[mark = none, color = red, domain = 18.42313787:20.681458, smooth]{-0.000296363*x^3 + 0.731989*x^2 -601.112*x + 164741 };
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Piecewise function modeling the outline of the dam}
+        \label{figDamModel}
+    \end{figure}
 
     \begin{equation}
        A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
     \end{equation}
- 
+
+
 %   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
 
 \end{document}
