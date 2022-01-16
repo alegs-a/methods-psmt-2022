@@ -6,11 +6,14 @@
 \usepackage{graphicx}
     \graphicspath{{./images/}}
 \usepackage{amsmath}
+\usepackage{amsthm}
 
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
 
-
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{observation}{Observation}
 
 \begin{document}
 
@@ -19,7 +22,7 @@
 \tableofcontents
 
 \section{Introduction}
-    The given task is to predict the time period after which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and the point at which the lake will be covered subsequently found.
+    The given task is to predict the date on which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and used to calculate the point at which the lake will be covered.
 
     \begin{figure}
         \centering
@@ -34,7 +37,9 @@
 
     \subsection{Observations}
 
-    When the diagram of the dam is oriented with the straight wall colinear to the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
+    \begin{observation}
+    When the diagram of the dam is oriented with the straight wall colinear with the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
+    \end{observation}
 
     % Need second observation (issue #1)    
     
@@ -42,9 +47,13 @@
     
     In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
 
-    Should the water level of the dam change, this would change the water's surface area, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
+    \begin{assumption}
+    If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
+    \end{assumption}
 
+    \begin{assumption}
     In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
+    \end{assumption}
     
 \section{Translation of mathematical concepts}
 
@@ -117,6 +126,20 @@
         \label{figDamFunction}
     \end{figure}
 
+    The values of $b_n$ were selected to create sections of data that were simple to create regression models for and are as follows:
+
+    \begin{align*}
+        b_0 &= 0 \\
+        b_1 &= 4.3 \\
+        b_2 &= 11.1 \\
+        b_3 &= 14.4 \\
+        b_4 &= 17.5 \\
+        b_5 &= 18.4 \\
+        b_6 &= 20.7 \\
+        b_7 &= 22.0 \\
+        b_8 &= 30
+    \end{align*}
+
     The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
 
     \begin{align*}
@@ -130,10 +153,22 @@
         f_8(x) &= -0.0556x^3 + 4.6621x^2 - 134.73x + 1347.2
     \end{align*}
 
-    \begin{equation}
-       A = \sum_{r=1}^8 \int_{x_{r-1}}^{x_r} f_r(x)\ {dx}
+    Using the subfunctions of $f$, the area $A$ inside the lake can be calculated using the definite integral of each function $f_n$ within its applicable domain, otherwise expressed as:
+
+    \begin{equation}\label{eqnAreaOfLakeFromFuncs}
+       A = \sum_{n=1}^8 \int_{b_{n-1}}^{b_n} f_n(x)\,dx
     \end{equation}
 
+    This process will now be demonstrated for $n = 1$:
+    \begin{align*}
+        A_1 =& \int_{b_0}^{b_1} f_1(x)dx \\
+        =& \int_{0}^{4.3} \left(-1.2364x^2 + 25.667x - 1.4657\right)dx \\
+        =& \left[-0.41213x^3 + 12.8335x^2 - 1.4657x\right]_0^{4.3} \\
+        =& (-0.41213 \dot 4.3^3 + 12.8335 \dot 4.3^2 - 1.4657 \dot 4.3) \\ &- (-0.41213 \dot 0^3 + 12.8335 \dot 0^2 - 1.4657 \dot 0) \\
+        =& 198.2217
+    \end{align*}
+
+    Thus the area of the lake is 2027.9283m$^2$
 
 %   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
 
