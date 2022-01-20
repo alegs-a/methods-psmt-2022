@@ -7,6 +7,8 @@
     \graphicspath{{./images/}}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage[style = alphabetic]{biblatex}
     \addbibresource{references.bib}
@@ -30,7 +32,7 @@
 
     \begin{figure}
         \centering
-        \includegraphics[width = 12cm]{damDiagram.png}
+        \includegraphics[width = 8cm]{damDiagram.png}
         \caption{Diagram of outline of dam}
         \label{figDamOutline}
     \end{figure}
@@ -201,11 +203,63 @@
             \caption{Raw data and regression model of bacteria population}
             \label{figBacteriaGrowth}
         \end{figure}
-            
+
+        Using this regression model, the point at which the area covered by the bacteria can be found as follows:
+        
+        \begin{align*}
+            2027.9283 &= 1.66918e^{0.284009x} \\
+            \frac{2027.9283}{1.66918} &= e^{0.284009x} \\
+            \ln 1214.92487329 &= 0.284009x \\
+            x &= \frac{\ln 1214.92487329}{0.284009} \\
+            x &= 25.00779032
+        \end{align*} 
+
+        This means that the dam will be entirely covered by bacteria on the 25\textsuperscript{th} of January.
+
+\section{Evaluation}
+    
+    \subsection{Justification of mathematical procedures}
+
+    \subsection{Reasonableness}
+
+    \subsection{Evaluation of model and result}
+
+        \subsubsection{Strengths}
+            The model had a very close fit with the data in each section, and was also very visually similar to the plot of the raw data. 
+            \begin{figure}
+                \centering
+                \begin{subfigure}[b]{0.4\textwidth}
+                    \centering
+                    \begin{tikzpicture}
+                        \begin{axis}[
+                                scale only axis,
+                                width = \textwidth,
+                                xmajorgrids = true,
+                                ymajorgrids = true
+                            ]
+                            \addplot[only marks, mark = x]table[x=x, y=y]{data/data.txt};
+                        \end{axis}
+                    \end{tikzpicture}
+                    \caption{Raw data}
+                \end{subfigure}
+                \hfill
+                \begin{subfigure}[b]{0.4\textwidth}
+                    \centering
+                    \frame{%
+                    \includegraphics[width = \textwidth]{damFunction.pdf}
+                }
+                    \caption{Piecewise function}
+                \end{subfigure}
+                \caption{Comparison of raw data and piecewise function}
+                \label{figCompareDataAndFunction}
+            \end{figure}
 
 
+        \subsubsection{Limitations}
 
-%   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
+\section{Conclusion}
+
+
 
 \printbibliography
 
