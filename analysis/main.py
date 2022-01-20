@@ -10,17 +10,6 @@ def mappoint(i):
     else:
         return 0
 
-def variancesquared(mean, true):
-    output = 0
-    for y in true:
-        output += (mean - y) ** 2
-    return output
-
-def rsquared(x, y, degree):
-    varMean = variancesquared(np.mean(y), y)
-    varModel = polyfit(x, y, degree, full=True)[1][0][0]
-    return((varMean - varModel)/varMean)
-
 
 if __name__ == "__main__":
     img = Image.open('skinnyDamScaledToPixels.png')
