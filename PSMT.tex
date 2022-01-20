@@ -7,6 +7,7 @@
     \graphicspath{{./images/}}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{booktabs}
 \usepackage[style = alphabetic]{biblatex}
     \addbibresource{references.bib}
 
@@ -41,7 +42,7 @@
     \subsection{Observations}
 
         \begin{observation}
-        When the diagram of the dam is oriented with the straight wall colinear with the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with a mathematical function.
+            When the diagram of the dam is oriented with the straight wall colinear with the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with a mathematical function.
         \end{observation}
 
         \begin{observation}
@@ -53,11 +54,11 @@
         In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
 
         \begin{assumption}
-        If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
+            If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
         \end{assumption}
 
-        \begin{assumption}
-        In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
+        \begin{assumption} \label{asmptnBacteriaGrowth}
+            In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
         \end{assumption}
         
 \section{Translation of mathematical concepts}
@@ -78,7 +79,7 @@
                     xmajorgrids = true,
                     ymajorgrids = true
                 ]
-                \addplot[only marks, mark = x]table[x=x, y=y]{data.txt};
+                \addplot[only marks, mark = x]table[x=x, y=y]{data/data.txt};
             \end{axis}
         \end{tikzpicture}
         \caption{Raw data from Python script}
@@ -177,7 +178,32 @@
 
 
     \subsection{Projection of bacteria growth}
-        \parencite{bacteriaGrowth}
+    
+        \cite{bacteriaGrowth} states that a population of bacteria will grow exponentially when under the conditions assumed in Assumption \ref{asmptnBacteriaGrowth}. This means that the growth of the population can be modelled using an exponential function of the form 
+        \begin{equation}
+            f(x)=ae^{bx}
+        \end{equation}
+
+        Using an exponential regression model, the bacterial growth was found to fit the function $f(x) = 1.66918e^{0.284009x}$ with an $R^2$ value of 0.9999 (Figure \ref{figBacteriaGrowth})
+        \begin{figure}
+            \centering
+            \begin{tikzpicture}
+                \begin{axis}[
+                        title = {\textbf{Raw data points}},
+                        xmajorgrids = true,
+                        ymajorgrids = true,
+                        legend pos = north west
+                    ]
+                    \addplot[only marks]table[x=x, y=y]{data/bacteriaData.txt};\addlegendentry{Data point}
+                    \addplot[mark = none, domain = 0:20, smooth]{1.669188*e^(0.284009*x)};\addlegendentry{Regression model}
+                \end{axis}
+            \end{tikzpicture}
+            \caption{Raw data and regression model of bacteria population}
+            \label{figBacteriaGrowth}
+        \end{figure}
+            
+
+
 
 %   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
 
