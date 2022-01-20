@@ -11,3 +11,7 @@ venv/
 .idea
 data sheet.pdf
 methods ia1 psmt task sheet 2022.pdf
+*.bbl
+*.bcf
+*.blg
+*.run.xml

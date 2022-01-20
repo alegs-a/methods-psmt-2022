@@ -7,6 +7,8 @@
     \graphicspath{{./images/}}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage[style = alphabetic]{biblatex}
+    \addbibresource{references.bib}
 
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
@@ -20,6 +22,7 @@
 \maketitle
 \setcounter{tocdepth}{1}
 \tableofcontents
+
 
 \section{Introduction}
     The given task is to predict the date on which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and used to calculate the point at which the lake will be covered.
@@ -37,26 +40,28 @@
 
     \subsection{Observations}
 
-    \begin{observation}
-    When the diagram of the dam is oriented with the straight wall colinear with the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with some sort of mathematical function.
-    \end{observation}
+        \begin{observation}
+        When the diagram of the dam is oriented with the straight wall colinear with the $x$-axis, the rest of the outline passes the vertical line test, meaning that it can be modelled with a mathematical function.
+        \end{observation}
 
-    % Need second observation (issue #1)    
+        \begin{observation}
+            The area covered by the bacteria increases each day, suggesting that it will eventually increase to be larger than that of the dam.
+        \end{observation}
     
     \subsection{Assumptions}
     
-    In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
+        In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
 
-    \begin{assumption}
-    If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
-    \end{assumption}
+        \begin{assumption}
+        If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
+        \end{assumption}
 
-    \begin{assumption}
-    In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
-    \end{assumption}
-    
+        \begin{assumption}
+        In a similar vein, there are many factors which can influence the growth rate of a population of bacteria, including access to a food source, temperature and competition for space. Similarly to the dam's water level, no data is provided around this, meaning that it must be assumed that the none of these factors will affect the bacteria as the population grows.
+        \end{assumption}
+        
 \section{Translation of mathematical concepts}
-
+    
     As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of dam.
 
     In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
@@ -65,7 +70,7 @@
 
     To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
-    \begin{figure}
+    \begin{figure} % Raw data
         \centering
         \begin{tikzpicture}
             \begin{axis}[
@@ -82,7 +87,7 @@
 
     In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
 
-    \begin{figure}
+    \begin{figure} % Sectioned data
         \centering
         \begin{tikzpicture}
             \begin{axis}[
@@ -104,72 +109,78 @@
         \label{figSectionedData}
     \end{figure}
 
-\subsection{Calculation of area}
+    \subsection{Calculation of area}
 
-    Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$. Let us also  define the piecewise function $f$ as follows (Figure \ref{figDamFunction}):
+        Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$. Let us also  define the piecewise function $f$ as follows (Figure \ref{figDamFunction}):
 
-    \begin{equation}
-        f(x) = \begin{cases}
-            f_1(x) & b_0 \leq x < b_1 \\
-            f_2(x) & b_1 \leq x < b_2 \\
-            \vdots & \vdots \\
-            f_7(x) & b_6 \leq x < b_7 \\
-            f_8(x) & b_7 \leq x \leq b_8
-        \end{cases}
-        \label{eqnPiecewiseFunction}
-    \end{equation}
+        \begin{equation} % Piecewise function
+            f(x) = \begin{cases}
+                f_1(x) & b_0 \leq x < b_1 \\
+                f_2(x) & b_1 \leq x < b_2 \\
+                \vdots & \vdots \\
+                f_7(x) & b_6 \leq x < b_7 \\
+                f_8(x) & b_7 \leq x \leq b_8
+            \end{cases}
+            \label{eqnPiecewiseFunction}
+        \end{equation}
 
-    \begin{figure}
-        \centering
-        \includegraphics[width = 8cm]{damFunction.pdf}
-        \caption{Piecewise function modelling outline of dam}
-        \label{figDamFunction}
-    \end{figure}
+        \begin{figure} % Dam function from desmos
+            \centering
+            \includegraphics[width = 8cm]{damFunction.pdf}
+            \caption{Piecewise function modelling outline of dam}
+            \label{figDamFunction}
+        \end{figure}
 
-    The values of $b_n$ were selected to create sections of data that were simple to create regression models for and are as follows:
+        The values of $b_n$ were selected to create sections of data that were simple to create regression models for and are as follows:
 
-    \begin{align*}
-        b_0 &= 0 \\
-        b_1 &= 4.3 \\
-        b_2 &= 11.1 \\
-        b_3 &= 14.4 \\
-        b_4 &= 17.5 \\
-        b_5 &= 18.4 \\
-        b_6 &= 20.7 \\
-        b_7 &= 22.0 \\
-        b_8 &= 30
-    \end{align*}
+        \begin{align*} % values of b_n
+            b_0 &= 0 \\
+            b_1 &= 4.3 \\
+            b_2 &= 11.1 \\
+            b_3 &= 14.4 \\
+            b_4 &= 17.5 \\
+            b_5 &= 18.4 \\
+            b_6 &= 20.7 \\
+            b_7 &= 22.0 \\
+            b_8 &= 30
+        \end{align*}
 
-    The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
+        The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
 
-    \begin{align*}
-        f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
-        f_2(x) &= 0.0922x^5 - 3.4033x^4 + 47.748x^3 - 315.07x^2 + 968.69x - 1022.9 \\
-        f_3(x) &= -0.4898x^4 + 22.736x^3 - 388.82x^2 + 2903.4x - 7897 \\
-        f_4(x) &= 1.1895x^6 - 110.38x^5 + 4255.2x^4 - 8.7230\cdot 10^04x^3 + 1.0027\cdot 10^6x^2 \\ &- 6.1276\cdot 10^6x + 1.5551\cdot 10^7 \\
-        f_5(x) &= 6046.8x^6 - 6.5135 \cdot 10^5x^5 + 2.9233 \cdot 10^7x^4 - 6.9967 \cdot 10^8x^3 \\ &+ 9.4192 \cdot 10^9x^2 - 6.7624 \cdot 10^{10}x + 2.0228 \cdot 10^{11} \\
-        f_6(x) &= -3.4000x^3 + 199.63x^2 - 3897.0x + 25388 \\
-        f_7(x) &= 253.31x^5 - 26978x^4 + 1.1491 \cdot 10^6x^3 - 2.4471 \cdot 10^7x^2 + 2.6052 \cdot 10^8x \\ &- 1.1093 \cdot 10^9 \\
-        f_8(x) &= -0.0556x^3 + 4.6621x^2 - 134.73x + 1347.2
-    \end{align*}
+        \begin{align*} % Subfunctions of f
+            f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
+            f_2(x) &= 0.0922x^5 - 3.4033x^4 + 47.748x^3 - 315.07x^2 + 968.69x - 1022.9 \\
+            f_3(x) &= -0.4898x^4 + 22.736x^3 - 388.82x^2 + 2903.4x - 7897 \\
+            f_4(x) &= 1.1895x^6 - 110.38x^5 + 4255.2x^4 - 8.7230\cdot 10^04x^3 + 1.0027\cdot 10^6x^2 \\ &- 6.1276\cdot 10^6x + 1.5551\cdot 10^7 \\
+            f_5(x) &= 6046.8x^6 - 6.5135 \cdot 10^5x^5 + 2.9233 \cdot 10^7x^4 - 6.9967 \cdot 10^8x^3 \\ &+ 9.4192 \cdot 10^9x^2 - 6.7624 \cdot 10^{10}x + 2.0228 \cdot 10^{11} \\
+            f_6(x) &= -3.4000x^3 + 199.63x^2 - 3897.0x + 25388 \\
+            f_7(x) &= 253.31x^5 - 26978x^4 + 1.1491 \cdot 10^6x^3 - 2.4471 \cdot 10^7x^2 + 2.6052 \cdot 10^8x \\ &- 1.1093 \cdot 10^9 \\
+            f_8(x) &= -0.0556x^3 + 4.6621x^2 - 134.73x + 1347.2
+        \end{align*}
 
-    Using the subfunctions of $f$, the area $A$ inside the lake can be calculated using the definite integral of each function $f_n$ within its applicable domain, otherwise expressed as:
+        Using the subfunctions of $f$, the area $A$ inside the lake can be calculated using the sums of the definite integrals of each function $f_n(x)$ within its applicable domain $b_{n-1} \leq x < b_n$, otherwise expressed as:
 
-    \begin{equation}\label{eqnAreaOfLakeFromFuncs}
-       A = \sum_{n=1}^8 \int_{b_{n-1}}^{b_n} f_n(x)\,dx
-    \end{equation}
+        \begin{equation}\label{eqnAreaOfLakeFromFuncs}
+           A = \sum_{n=1}^8 \int_{b_{n-1}}^{b_n} f_n(x)\,dx
+        \end{equation}
 
-    This process will now be demonstrated for $n = 1$:
-    \begin{align*}
-        A_1 =& \int_{b_0}^{b_1} f_1(x)dx \\
-        =& \int_{0}^{4.3} \left(-1.2364x^2 + 25.667x - 1.4657\right)dx \\
-        =& \left[-0.41213x^3 + 12.8335x^2 - 1.4657x\right]_0^{4.3} \\
-        =& (-0.41213 \dot 4.3^3 + 12.8335 \dot 4.3^2 - 1.4657 \dot 4.3) \\ &- (-0.41213 \dot 0^3 + 12.8335 \dot 0^2 - 1.4657 \dot 0) \\
-        =& 198.2217
-    \end{align*}
+        This process will now be demonstrated for $n = 1$:
+        \begin{align*} % Manual calcs
+            A_1 =& \int_{b_0}^{b_1} f_1(x)dx \\
+            =& \int_{0}^{4.3} \left(-1.2364x^2 + 25.667x - 1.4657\right)dx \\
+            =& \left[-0.41213x^3 + 12.8335x^2 - 1.4657x\right]_0^{4.3} \\
+            =& (-0.41213 \cdot 4.3^3 + 12.8335 \cdot 4.3^2 - 1.4657 \cdot 4.3) \\ &- (-0.41213 \cdot 0^3 + 12.8335 \cdot 0^2 - 1.4657 \cdot 0) \\
+            =& 198.2217
+        \end{align*}
 
-    Thus the area of the lake is 2027.9283m$^2$
+        Using Equation \ref{eqnAreaOfLakeFromFuncs}, the area of the lake is 2027.9283m$^2$.
+
+
+    \subsection{Projection of bacteria growth}
+        \parencite{bacteriaGrowth}
 
 %   Since we are not trying to make predictions outside the domains of the relevant sections, the type of function used to model them is not relevant as long as it is a close enough fit within the domain. Since any function can be expressed as a polynomial of infinte degree, in this situation it is reasonable to only use polynomial models and simply increase their degree until they fit the data sufficiently closely, namely an $R^2$ of at least [R SQUARED]
+
+\printbibliography
 
 \end{document}
