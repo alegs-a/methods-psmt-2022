@@ -1,6 +1,7 @@
 \documentclass{article}
 
 
+
 \usepackage{pgfplots}
     \pgfplotsset{compat=1.17}
 \usepackage{graphicx}
@@ -10,11 +11,15 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{booktabs}
-\usepackage[style = alphabetic]{biblatex}
+\usepackage[style = apa]{biblatex}
     \addbibresource{references.bib}
+\usepackage[breaklinks]{hyperref}
 
 \title{Problem Solving and Modelling Task}
 \author{Alexander Arthur}
+
+\hbadness=10000
+\hfuzz=100pt
 
 \theoremstyle{definition}
 \newtheorem{assumption}{Assumption}
@@ -56,7 +61,7 @@
         In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
 
         \begin{assumption}
-            If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of of the lake.
+            If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of the lake.
         \end{assumption}
 
         \begin{assumption} \label{asmptnBacteriaGrowth}
@@ -65,7 +70,7 @@
         
 \section{Translation of mathematical concepts}
     
-    As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of dam.
+    As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of the dam.
 
     In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
  
@@ -221,14 +226,21 @@
     \subsection{Justification of mathematical procedures}
 
     \subsection{Reasonableness}
+        The model 
 
     \subsection{Evaluation of model and result}
 
         \subsubsection{Strengths}
-            The model had a very close fit with the data in each section, and was also very visually similar to the plot of the raw data. 
+            The model had a very close fit with the data in each section ($R^2 > 0.97$), and was also very visually similar to the plot of the raw data (Figure \ref{figCompareDataAndFunction}). This indicates that the shape whose area was calculated matched that of the physical dam closely, and since the process of integration bears no inherent inaccuracies it is likely that the area calculated is highly accurate.
+
+            Similarly, the model for the size of the bacteria population also had a very high $R^2$ value of 0.9999, indicating that it is also a very close fit for the data collected. An exponential function is also theoretically the correct type of function to model the size of a population of bacteria, since each generation the population multiplies by a certain amount when ignoring outside factors as per Assumption \ref{asmptnBacteriaGrowth}.
+
+            Another strength of the model is the extent to which it makes use of computational resources to increase its accuracy. Using a Python script to generate the set of points used for regression greatly increases the number of points available without introducing any inaccuracies due to human error. This in turn makes the regression models generated more accurate due to this elimination of human error. 
+
             \begin{figure}
                 \centering
                 \begin{subfigure}[b]{0.4\textwidth}
+                    \hfuzz=30pt
                     \centering
                     \begin{tikzpicture}
                         \begin{axis}[
@@ -244,10 +256,11 @@
                 \end{subfigure}
                 \hfill
                 \begin{subfigure}[b]{0.4\textwidth}
+                    \hfuzz=30pt
                     \centering
-                    \frame{%
-                    \includegraphics[width = \textwidth]{damFunction.pdf}
-                }
+                    \frame{
+                        \includegraphics[width = \textwidth]{damFunction.pdf}
+                    }
                     \caption{Piecewise function}
                 \end{subfigure}
                 \caption{Comparison of raw data and piecewise function}
