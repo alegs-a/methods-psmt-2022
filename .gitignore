@@ -15,3 +15,5 @@ methods ia1 psmt task sheet 2022.pdf
 *.bcf
 *.blg
 *.run.xml
+~
+*.out
