@@ -38,7 +38,7 @@
 \section{Introduction}
     The given task is to predict the date on which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and used to calculate the point at which the lake will be covered.
 
-    \begin{figure}
+    \begin{figure} % Diagram of dam
         \centering
         \includegraphics[width = 8cm]{damDiagram.png}
         \caption{Diagram of outline of dam}
@@ -64,7 +64,7 @@
         In order to simplify the problem, certain assumptions must be made either due to a lack of information provided or to bring the scope of the problem to a reasonable scale.
 
         \begin{assumption}
-            If the water level of the dam were to change the water's surface area woudld also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of the lake.
+            If the water level of the dam were to change the water's surface area would also change, since it is unlikely the walls of the dam are perfectly vertical. Changing the surface area of the dam would in turn affect the point at which the bacteria would cover the entire lake, affecting the result of the investigation. Since no data is provided on the water level, it is reasonable to assume that it is static, and will not have any effect on the surface area of the lake.
         \end{assumption}
 
         \begin{assumption} \label{asmptnBacteriaGrowth}
@@ -97,6 +97,7 @@
     \end{figure}
 
     In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+    % let us assume there exists a polynomial p(x) that perfectly models the dam. Weierstrass states that in the domain b_n < x < b_n+1 there exists a polynomial f(x) such that difference between p(x) and f(x) is not larger than \epsilon. Since p(x) is approximated by the points generated from the image, the R^2 value, a measure of variance, is a good way of determing whether p(x) is sufficiently close to f(x).
 
     \begin{figure} % Sectioned data
         \centering
@@ -156,7 +157,7 @@
             b_8 &= 30
         \end{align*}
 
-        The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
+        The subfunctions $f_1 \cdots f_8$ were found on a grphing calculator using polynomial regression models, increasing the degree by one until the model's $R^2$ is greater than 0.97 and the model is visually close to the shape of the data. The functions found are as follows:
 
         \begin{align*} % Subfunctions of f
             f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
@@ -184,7 +185,7 @@
             =& 198.2217
         \end{align*}
 
-        Using Equation \ref{eqnAreaOfLakeFromFuncs}, the area of the lake is 2027.9283m$^2$.
+        A graphing calculator was used to evaluate Equation \ref{eqnAreaOfLakeFromFuncs} and the area of the lake found to be 2027.93m$^2$.
 
 
     \subsection{Projection of bacteria growth}
@@ -229,7 +230,9 @@
     \subsection{Justification of mathematical procedures}
 
     \subsection{Reasonableness}
-        The model 
+        To determine whether the predicted date of complete coverage is reasonable, we must first determine the reasonableness of the estimation of the area of the dam. In order to do this, the image of the dam was scaled such that 1 pixel represented a 10 by 10cm area. A Python script was then written to count how many pixels were beneath the dam outline in each column of pixels, using the rectangle method of estimating the area underneath a curve. The script returned a value of 204\,020 pixels, or 2040.2m\textsuperscript{2}. This is an error of 0.64\% from the predicted area of 2027.93, an amount which is small enough to be negligible.
+
+        The 
 
     \subsection{Evaluation of model and result}
 
@@ -240,7 +243,7 @@
 
             Another strength of the model is the extent to which it makes use of computational resources to increase its accuracy. Using a Python script to generate the set of points used for regression greatly increases the number of points available without introducing any inaccuracies due to human error. This in turn makes the regression models generated more accurate due to this elimination of human error. 
 
-            \begin{figure}
+            \begin{figure} % Comparison of data and model
                 \centering
                 \begin{subfigure}[b]{0.4\textwidth}
                     \hfuzz=30pt
@@ -270,8 +273,8 @@
                 \label{figCompareDataAndFunction}
             \end{figure}
 
-
         \subsubsection{Limitations}
+            The model is limited by the fact that only one set of section boundaries were used. Another set of boundaries may have yielded more accurate regression models, and thus a more accurate calculation of the area of the dam. 
 
 \section{Conclusion}
 
