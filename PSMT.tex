@@ -41,7 +41,7 @@
 \section{Introduction}
     The given task is to predict the date on which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and used to calculate the point at which the lake will be covered.
 
-    \begin{figure}
+    \begin{figure} % Diagram of dam
         \centering
         \includegraphics[width = 8cm]{damDiagram.png}
         \caption{Diagram of outline of dam}
@@ -59,7 +59,11 @@
         \end{observation}
 
         \begin{observation}
-            The area covered by the bacteria increases each day, suggesting that it will eventually increase to be larger than that of the dam.
+            The size of the bacterial population was recorded at the end of each day, meaning that the measurements are consistent. However, measurements were not taken daily; there are only four data points provided.
+        \end{observation}
+
+        \begin{observation}
+            The area covered by the bacteria increases each day, suggesting that its gradient will be positive and thus that it will eventually increase to be larger than that of the dam.
         \end{observation}
     
     \subsection{Assumptions}
@@ -78,17 +82,22 @@
     
     As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of the dam.
 
-    In statistical modelling, a model can be overfitted to a dataset such that it is highly accurate within the domain of the data, but is wildly inaccurate outside this domain, meaning that it cannot be used to predict values outside the domain of the data and therefore is not useful. However, in this task, for any given segment of the piecewise function the only domain which is applicable is that of that segment, meaning that the concept of the function being over-fitted does not apply. In addition, the Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$.
- 
-    This means that since the only key metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
+    In order to create this piecewise function, the data was broken up into eight sections so as to reduce the complexity of the model needed for each section. In order to select these functions, regression analysis was used.
 
-    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels. This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
+    The Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$. This means that since the only metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
+
+    To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels (Appendix \ref{secPythonMakeCoordinates}, page, \pageref{secPythonMakeCoordinates}). This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
+
+    To predict the point at which the bacteria will cover the lake, regression will again be used, since it is an efficient way of finding a mathematical function that fits as closely as possible a set of discrete data points.
+
 
     \begin{figure} % Raw data
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title = {\textbf{Raw data points}},
+                    xlabel = {Width (m)},
+                    ylabel = {Height (m)},
                     xmajorgrids = true,
                     ymajorgrids = true
                 ]
@@ -100,12 +109,17 @@
     \end{figure}
 
     In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+    % let us assume there exists a polynomial p(x) that perfectly models the dam. Weierstrass states that in the domain b_n < x < b_n+1 there exists a polynomial f(x) such that difference between p(x) and f(x) is not larger than \epsilon. Since p(x) is approximated by the points generated from the image, the R^2 value, a measure of variance, is a good way of determing whether p(x) is sufficiently close to f(x).
 
     \begin{figure} % Sectioned data
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title = {\textbf{Sectioned data}},
+                    xlabel = {Width (m)},
+                    ylabel = {Height (m)},
+                    xlabel = {Distance from left side of dam (m)},
+                    ylabel = {Height of dam (m)},
                     xmajorgrids = true,
                     ymajorgrids = true
                 ]
@@ -159,7 +173,7 @@
             b_8 &= 30
         \end{align*}
 
-        The subfunctions $f_1 \cdots f_8$ were found using polynomial regression models and are defined as follows:
+        The subfunctions $f_1 \cdots f_8$ were found on a graphing calculator using polynomial regression models, increasing the degree by one until the model's $R^2$ is greater than 0.97 and the model is visually close to the shape of the data. The functions found are as follows:
 
         \begin{align*} % Subfunctions of f
             f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
@@ -177,6 +191,25 @@
         \begin{equation}\label{eqnAreaOfLakeFromFuncs}
            A = \sum_{n=1}^8 \int_{b_{n-1}}^{b_n} f_n(x)\,dx
         \end{equation}
+        
+        Equation \ref{eqnAreaOfLakeFromFuncs} was then evaluated using a graphics calculator for each $n$.
+
+        \begin{center}
+            \centering
+            \begin{tabular}{@{}rr@{}}
+                \toprule
+                $n$ & Area ($m^2$) \\ \midrule
+                1       & 198.22       \\
+                2       & 561.52       \\
+                3       & 311.77       \\
+                4       & 316.16       \\
+                5       & 101.00       \\
+                6       & 218.10       \\
+                7       & 113.73       \\
+                8       & 163.43       \\ \midrule
+                Total   & 2027.93      \\ \bottomrule
+            \end{tabular}
+        \end{center}
 
         This process will now be demonstrated for $n = 1$:
         \begin{align*} % Manual calcs
@@ -187,63 +220,90 @@
             =& 198.2217
         \end{align*}
 
-        Using Equation \ref{eqnAreaOfLakeFromFuncs}, the area of the lake is 2027.9283m$^2$.
 
+        A graphing calculator was used to evaluate Equation \ref{eqnAreaOfLakeFromFuncs} and the area of the lake found to be 2027.93m$^2$.
 
     \subsection{Projection of bacteria growth}
-    
-        \cite{bacteriaGrowth} states that a population of bacteria will grow exponentially when under the conditions assumed in Assumption \ref{asmptnBacteriaGrowth}. This means that the growth of the population can be modelled using an exponential function of the form 
+        The data provided for the area covered by the bacteria is as follows.
+
+        \begin{center}
+            \begin{tabular}{@{}ll@{}}
+                \toprule
+                Date   & Area ($m^2$) \\ \midrule
+                1 Jan  & 1            \\
+                9 Jan  & 20           \\
+                15 Jan & 119          \\
+                19 Jan & 368          \\ \bottomrule
+            \end{tabular}
+        \end{center}
+
+
+        In order to project the size of the bacterial population, multiple types of function were tested using regression analysis. The types of function tested were exponential, quadratic and cubic. Regression analyses for each of these functions were performed using a graphics calculator and the results summarised below (Figure \ref{figBacteriaGrowth}.
+        
+        \begin{center}
+            \begin{tabular}{@{}lll@{}}
+                \toprule
+                Type        & Form                   & $R^2$  \\ \midrule
+                Exponential & $re^{ax}-b$            & 1      \\
+                Quadratic   & $ax^2 + bx + c$        & 0.9701 \\
+                Cubic       & $ax^3 + bx^2 + cx + d$ & 1      \\ \bottomrule
+            \end{tabular}
+        \end{center}
+
+        Both the exponential and cubic functions have an $R^2$ value of 1, indicating that they both exactly fit the data provided. However, the cubic model predicts that the area covered by the bacteria is negative in the 24 hours before the first measurement was taken. This is not physically possible, meaning that this model does not accurately model the size of the population and that therefore the exponential model will be used to predict the growth of the bacteria.
+
+        The exponential function found was
         \begin{equation}
-            f(x)=ae^{bx}
+            f(x) = 1.80065e^{0.280261x}-1.80409
         \end{equation}
 
-        Using an exponential regression model, the bacterial growth was found to fit the function $f(x) = 1.66918e^{0.284009x}$ with an $R^2$ value of 0.9999 (Figure \ref{figBacteriaGrowth})
         \begin{figure}
             \centering
             \begin{tikzpicture}
                 \begin{axis}[
                         title = {\textbf{Raw data points}},
+                        xlabel = {Time (days)},
+                        ylabel = {Area covered (m)},
                         xmajorgrids = true,
                         ymajorgrids = true,
                         legend pos = north west
                     ]
-                    \addplot[only marks]table[x=x, y=y]{data/bacteriaData.txt};\addlegendentry{Data point}
-                    \addplot[mark = none, domain = 0:20, smooth]{1.669188*e^(0.284009*x)};\addlegendentry{Regression model}
+                    \addplot+[only marks]table[x=x, y=y]{data/bacteriaData.txt};\addlegendentry{Data point}
+                    \addplot+[mark = none, domain = 0:20, smooth]{1.669188*e^(0.284009*x)};\addlegendentry{Exponential model}
+                    \addplot+[color = green, mark = none, domain = 0:20, smooth]{2.08195*x^2 - 22.5996*x + 27.9101};\addlegendentry{Quadratic model}
+                    \addplot+[color = cyan, mark = none, domain = 0:20, smooth]{0.198115*x^3 + -3.94396*x^2 + 23.786*x + -19.0402};\addlegendentry{Cubic model}
                 \end{axis}
             \end{tikzpicture}
-            \caption{Raw data and regression model of bacteria population}
+            \caption{Raw data and regression models of bacteria population}
             \label{figBacteriaGrowth}
         \end{figure}
 
         Using this regression model, the point at which the area covered by the bacteria can be found as follows:
         
         \begin{align*}
-            2027.9283 &= 1.66918e^{0.284009x} \\
-            \frac{2027.9283}{1.66918} &= e^{0.284009x} \\
-            \ln 1214.92487329 &= 0.284009x \\
-            x &= \frac{\ln 1214.92487329}{0.284009} \\
-            x &= 25.00779032
+            2027.9283 &= 1.80065e^{0.280261x}-1.80409 \\
+            2026.1197 &= 1.80065e^{0.280261x} \\
+            \frac{2026.1197}{1.80065} &= e^{0.280261x} \\
+            \ln 1125.21572765 &= 0.280261x \\
+            x &= \frac{\ln 1125.21572765}{0.280261} \\
+            x &= 25.03636597
         \end{align*} 
 
         This means that the dam will be entirely covered by bacteria on the 25\textsuperscript{th} of January.
 
 \section{Evaluation}
     
-    \subsection{Justification of mathematical procedures}
-
     \subsection{Reasonableness}
-        The model 
+        To determine whether the predicted date of complete coverage is reasonable, we must first determine the reasonableness of the estimation of the area of the dam. In order to do this, the image of the dam was scaled such that 1 pixel represented a 10 by 10cm area. A Python script was then written to count how many pixels were beneath the dam outline in each column of pixels, using the rectangle method of estimating the area underneath a curve. The script returned a value of 204\,020 pixels, or 2040.2m\textsuperscript{2}. This is an error of 0.64\% from the predicted area of 2027.93, an amount which is small enough to be negligible.
+
+        The 
 
     \subsection{Evaluation of model and result}
 
         \subsubsection{Strengths}
             The model had a very close fit with the data in each section ($R^2 > 0.97$), and was also very visually similar to the plot of the raw data (Figure \ref{figCompareDataAndFunction}). This indicates that the shape whose area was calculated matched that of the physical dam closely, and since the process of integration bears no inherent inaccuracies it is likely that the area calculated is highly accurate.
 
-            Similarly, the model for the size of the bacteria population also had a very high $R^2$ value of 0.9999, indicating that it is also a very close fit for the data collected. An exponential function is also theoretically the correct type of function to model the size of a population of bacteria, since each generation the population multiplies by a certain amount when ignoring outside factors as per Assumption \ref{asmptnBacteriaGrowth}.
-
-            Another strength of the model is the extent to which it makes use of computational resources to increase its accuracy. Using a Python script to generate the set of points used for regression greatly increases the number of points available without introducing any inaccuracies due to human error. This in turn makes the regression models generated more accurate due to this elimination of human error. 
-
-            \begin{figure}
+            \begin{figure} % Comparison of data and model
                 \centering
                 \begin{subfigure}[b]{0.4\textwidth}
                     \hfuzz=30pt
@@ -273,13 +333,50 @@
                 \label{figCompareDataAndFunction}
             \end{figure}
 
+            Similarly, the model for the size of the bacteria population also had a very high $R^2$ value of 0.9999, indicating that it is also a very close fit for the data collected. An exponential function is also theoretically the correct type of function to model the size of a population of bacteria, since each generation the population multiplies by a certain amount when ignoring outside factors as per Assumption \ref{asmptnBacteriaGrowth}.
+
+            Another strength of the model is the extent to which it makes use of computational resources to increase its accuracy. Using a Python script to generate the set of points used for regression greatly increases the number of points available without introducing any inaccuracies due to human error. This in turn makes the regression models generated more accurate due to this elimination of human error. 
+
 
         \subsubsection{Limitations}
+            The model is limited by the fact that only one set of section boundaries were used. Another set of boundaries may have yielded more accurate regression models, and thus a more accurate calculation of the area of the dam. 
+            The model is also limited by the 
 
 \section{Conclusion}
 
 
+\newpage
 
-\printbibliography
+\section{Appendix}
+
+    \subsection{Python script}\label{secPythonMakeCoordinates}
+    \begin{verbatim}
+if __name__ == "__main__":
+    img = Image.open('dam cropped.png')
+
+    [width, height] = img.size
+    rowslist = []
+    xvals = []
+    yvals = []
+    regressionDegree = 10
+
+    # make image binary (each pixel is either white or black)
+    img = img.point(mappoint)
+
+    # find coordinates of black pixels
+    for x in range(width):
+        for y in range(height):
+            if img.getpixel((x, y)) == (0, 0, 0):
+                # print(x, y, img.getpixel((x, y)))
+                rowslist.append([x, height - 1 - y])
+                xvals.append(x)
+                yvals.append(height - 1 - y)
+
+
+    with open('points.csv', 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(rowslist)
+    \end{verbatim}
+
 
 \end{document}
