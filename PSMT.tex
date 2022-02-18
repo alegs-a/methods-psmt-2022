@@ -37,6 +37,11 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 
+\vfill
+
+Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equations): 1683
+
+\newpage
 
 \section{Introduction}
     The given task is to predict the date on which a population of bacteria will completely cover the surface of the water in a dam (Figure \ref{figDamOutline}). In order to do this, the area of the lake must first be calculated from the diagram provided. Once this area is known, the growth of the bacteria can then be projected and used to calculate the point at which the lake will be covered.
@@ -59,11 +64,11 @@
         \end{observation}
 
         \begin{observation}
-            The size of the bacterial population was recorded at the end of each day, meaning that the measurements are consistent. However, measurements were not taken daily; there are only four data points provided.
+            The size of the bacterial population was recorded at the end of each day, meaning that the measurements are consistent. However, measurements were not taken daily; there are only four data points provided. This means that a method must be used to extrapolate this data foward to a point in time where the area covered exceeds that of the lake.
         \end{observation}
 
         \begin{observation}
-            The area covered by the bacteria increases each day, suggesting that its gradient will be positive and thus that it will eventually increase to be larger than that of the dam.
+            The area covered by the bacteria increases each day, suggesting that its gradient will be positive and thus that it will eventually increase to be larger than that of the dam. This means that the dam will eventually be covered in bacteria by a certain date, which this investigation will find.
         \end{observation}
     
     \subsection{Assumptions}
@@ -89,7 +94,6 @@
     To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels (Appendix \ref{secPythonMakeCoordinates}, page, \pageref{secPythonMakeCoordinates}). This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
     To predict the point at which the bacteria will cover the lake, regression will again be used, since it is an efficient way of finding a mathematical function that fits as closely as possible a set of discrete data points.
-
 
     \begin{figure} % Raw data
         \centering
@@ -173,7 +177,7 @@
             b_8 &= 30
         \end{align*}
 
-        The subfunctions $f_1 \cdots f_8$ were found on a graphing calculator using polynomial regression models, increasing the degree by one until the model's $R^2$ is greater than 0.97 and the model is visually close to the shape of the data. The functions found are as follows:
+        The subfunctions $f_1 \cdots f_8$ were found using a graphing calculator using polynomial regression models, repeatedly increasing the degree by one until the model's $R^2$ was greater than 0.97 and the model was visually close to the shape of the data. The functions found are as follows:
 
         \begin{align*} % Subfunctions of f
             f_1(x) &= -1.2364x^2 + 25.667x - 1.4657 \\
@@ -296,7 +300,10 @@
     \subsection{Reasonableness}
         To determine whether the predicted date of complete coverage is reasonable, we must first determine the reasonableness of the estimation of the area of the dam. In order to do this, the image of the dam was scaled such that 1 pixel represented a 10 by 10cm area. A Python script was then written to count how many pixels were beneath the dam outline in each column of pixels, using the rectangle method of estimating the area underneath a curve. The script returned a value of 204\,020 pixels, or 2040.2m\textsuperscript{2}. This is an error of 0.64\% from the predicted area of 2027.93, an amount which is small enough to be negligible.
 
-        The 
+        In addition, the area of a triangle with a base of 30m and a height of 133m is 1995m\textsuperscript{2}, which is also very close to 2027.93. Since both of thes methods of approximating the area of the dam are close to the actual value calculated, the solution for the area of the dam is reasonable.
+
+        The prediction of when the bacteria will cover the dam is also reasonable, since it is based on valid assumptions. Specifically, the assumption that no outside factors would influence the growth of the bacteria was both necessary and reasonable, because the amount of resources consumed by a population of bacteria in 25 days would not exceed that which is available in the entire body of water of a dam. Similarly, the assumption that the water level of the dam was valid, since dams will actively regulate their level by increasing or decreasing output to match that which is flowing in, resulting in no net change in quantity of water and thus in surface area.
+
 
     \subsection{Evaluation of model and result}
 
@@ -340,7 +347,7 @@
 
         \subsubsection{Limitations}
             The model is limited by the fact that only one set of section boundaries were used. Another set of boundaries may have yielded more accurate regression models, and thus a more accurate calculation of the area of the dam. 
-            The model is also limited by the 
+            The model is also limited by the fact that the Python scripts used are highly specialised to this task. While the approach they use is widely applicable, the specific implementation used is not highly versatile, limiting their usefulness outside the context of this task.
 
 \section{Conclusion}
 
@@ -362,6 +369,8 @@ if __name__ == "__main__":
 
     # make image binary (each pixel is either white or black)
     img = img.point(mappoint)
+
+
 
     # find coordinates of black pixels
     for x in range(width):
