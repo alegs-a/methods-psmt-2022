@@ -61,7 +61,7 @@ Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equatio
         \end{observation}
 
         \begin{observation}
-            The size of the bacterial population was recorded at the end of each day, meaning that the measurements are consistent. However, measurements were not taken daily; there are only four data points provided. This means that a method must be used to extrapolate this data foward to a point in time where the area covered exceeds that of the lake.
+            The size of the bacterial population was recorded at the same time each day, meaning that the measurements are consistent. However, measurements were not taken daily; there are only four data points provided. This means that a method must be used to extrapolate this data foward to a point in time where the area covered exceeds that of the lake.
         \end{observation}
 
         \begin{observation}
@@ -84,9 +84,9 @@ Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equatio
     
     As per the requirements of the task, a mathematical approach must be used to calculate the area of the dam. To satisfy this requirement, the definite integral of a piecewise function will be used to calculate the area of the dam.
 
-    In order to create this piecewise function, the data was broken up into eight sections so as to reduce the complexity of the model needed for each section. In order to select these functions, regression analysis was used.
+    In order to create this piecewise function, the data was broken up horizontally into eight sections so as to reduce the complexity of the model needed for each section. In order to select these functions, regression analysis was used.
 
-    The Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$. This means that since the only metric used to select a function is its accuracy within the specified domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
+    The Weierstrass approximation theorem states that for any continuous function $f$ over the real interval $[a, b]$ and any $\epsilon > 0$ there exists a polynomial $p$ such that $|f(x) - p(x)| < \epsilon$, where $a \leq x \leq b$. This means that since the only metric that will be used to select a function is its accuracy within its specific domain, regression was used to select a function within each defined section, and the regression models used were strictly polynomial; the degree of the polynomial was simply increased until the function fit the data to a sufficient degree of accuracy ($R^2 > 0.97$).
 
     To generate the points to be used for these regressions, a Python script was written to list the coordinates of the topmost black pixel in each column of pixels (Appendix \ref{secPythonMakeCoordinates}, page, \pageref{secPythonMakeCoordinates}). This generated a list of 1262 pixel coordinates, which were scaled to the dimensions of the dam such that one unit on the $x$ and $y$ axes were each equal to 1 meter and subsequently used to generate regression models (Figure \ref{figRawData}).
 
@@ -109,7 +109,7 @@ Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equatio
         \label{figRawData}
     \end{figure}
 
-    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected to have more simple shapes than the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
+    In an ideal scenario, a single function could be used to model the entire length of the dam's outline. However, due to the computational limits of the available software a polynomial regression of sufficiently high degree is not possible. This means that the data was instead divided into several sections (Figure \ref{figSectionedData}), each of which were then  used to run a polynomial regression. Since these sections were selected such that their shapes were simpler than that of the entire dataset, polynomials of much lower degree ($< 6$) were sufficient to replicate their shape to a sufficient degree of accuracy.
     % let us assume there exists a polynomial p(x) that perfectly models the dam. Weierstrass states that in the domain b_n < x < b_n+1 there exists a polynomial f(x) such that difference between p(x) and f(x) is not larger than \epsilon. Since p(x) is approximated by the points generated from the image, the R^2 value, a measure of variance, is a good way of determing whether p(x) is sufficiently close to f(x).
 
     \begin{figure} % Sectioned data
@@ -140,7 +140,7 @@ Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equatio
 
     \subsection{Calculation of area}
 
-        Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$. Let us also  define the piecewise function $f$ as follows (Figure \ref{figDamFunction}):
+        Let us define a variable $b$ for the boundaries between the sections, such that $b_0 = 0$, $b_1 = 4.3$ \ldots $b_8 = 30$. Let us also  define the piecewise function $f$ that models the outline of the dam as follows (Figure \ref{figDamFunction}):
 
         \begin{equation} % Piecewise function
             f(x) = \begin{cases}
@@ -347,6 +347,7 @@ Word count excluding QCAA exclusions (e.g.\ title pages, data tables and equatio
             The model is also limited by the fact that the Python scripts used are highly specialised to this task. While the approach they use is widely applicable, the specific implementation used is not highly versatile, limiting their usefulness outside the context of this task.
 
 \section{Conclusion}
+In this task, the definite integral of a function modelling the outline of a dam was used to calculate the dam's surface area. The area calculated was 2027.93m\textsuperscript{2}, and this value was compared with a model predicting the growth of a population of bacteria on the lake's surface. Using regression analysis, an exponential model was selected to predict this, and subsequently was able to predict that the dam would be completely covered by bacteria on the 25\textsuperscript{th} of January. The solution was found to be reasonable, and was highly accurate due to the computational methods used, but was limited in its versatility in being able to be applied to other problems.
 
 
 \newpage
